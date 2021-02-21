@@ -7,9 +7,13 @@ class DictionaryApiService {
     this.getDictionaryUrl = getDictionaryUrl;
   }
 
-  getDictionaryPage(page) {
-    return axios.post(this.config.getDictionaryUrl, {}, {
-      params: { page }
+  getDictionaryPage(page, cookie) {
+    return axios.post(this.getDictionaryUrl, {}, {
+      params: { page },
+      headers: {
+        Cookie: cookie,
+        "x-requested-with": "XMLHttpRequest"
+      }
     });
   }
 }

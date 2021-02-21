@@ -1,7 +1,7 @@
 {
   "name": "puzzle-movies-to-anki-droid-words-importer",
   "version": "1.0.0",
-  "description": "It is a small cli appication which allows to import words from your dictionarry on the https://puzzle-movies.com/ to anki droid (https://apps.ankiweb.net/)",
+  "description": "It is a small command-line application that allows importing words from your dictionary on the https://puzzle-movies.com/ to Anki droid (https://apps.ankiweb.net/)",
   "main": "bin/index.js",
   "author": "Nickolay Paramonov (https://github.com/doing-art)",
   "license": "MIT",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "form-data": "^4.0.0",
     "yargs": "^16.2.0"
   }
 }
