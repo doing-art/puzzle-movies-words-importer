@@ -6,6 +6,7 @@ const DictionaryApiService = require('./api/dictionary-api-service');
 const DictionaryService = require('./services/dictionary-service');
 const AuthService = require('./services/auth-service');
 const ParserService = require('./services/parser-service');
+const FileGenerator = require('./anki/file-generator');
 
 class Application {
   constructor() {
@@ -13,11 +14,7 @@ class Application {
   }
 
   async init() {
-    const argv = Init.initYargs({
-      all: config.TYPE_ALL,
-      page: config.TYPE_PAGE,
-      word: config.TYPE_WORD
-    });
+    const argv = Init.initYargs(config.EXPORT_TYPES);
     Init.initAxios(config.PUZZLE_MOVIES_ORIGIN);
 
     const authApiService = new AuthApiService(config.PUZZLE_MOVIES_AUTH_URL);
@@ -29,32 +26,33 @@ class Application {
     const parserService = new ParserService();
     const dictionaryService = new DictionaryService(config.WORDS_ON_PAGE_NUMBER, dictionaryApiService, parserService);
 
-    // const allWords = await dictionaryService.getAllWords();
-    // const firstTwoPagesWords = await dictionaryService.getAllWordsOnPages(1, 2);
-    // const firstNWords = await dictionaryService.getSeveralWords(78);
-    console.log('allWords');
+    const ankiFileGenerator = new FileGenerator(config.OUTCOME_DIRECTORY);
+    const wordsList = await this.getWords(dictionaryService, argv, config.EXPORT_TYPES);
+    await ankiFileGenerator.generateFile(wordsList);
   }
 
   getAllWordsWrapper(dictionaryService) {
     return dictionaryService.getAllWords();
   }
 
-  getAllWordsOnPagesWrapper(dictionaryService, {  }) {
-
+  getAllWordsOnPagesWrapper(dictionaryService, { startpage, finishpage }) {
+    return dictionaryService.getAllWordsOnPages(startpage, finishpage);
   }
 
   getSeveralWordsWrapper(dictionaryService, { words }) {
-
+    return dictionaryService.getSeveralWords(words);
   }
 
-  exportWords(dictionaryService, argv) {
-
-
+  getWords(dictionaryService, argv, exportTypes) {
     const typesToImplementationMap = new Map([
-      ['all', 'one'],
-      ['page', 'two'],
-      ['word', 'three'],
+      [exportTypes.ALL, this.getAllWordsWrapper],
+      [exportTypes.PAGE, this.getAllWordsOnPagesWrapper],
+      [exportTypes.WORD, this.getSeveralWordsWrapper],
     ]);
+
+    const wordsGetter = typesToImplementationMap.get(argv.type) || typesToImplementationMap.get(exportTypes.ALL);
+
+    return wordsGetter(dictionaryService, argv);
   }
 }
 
@@ -69,6 +67,7 @@ new Application();
 // 2. Move axios init to a separate module
 // 3. Rename yargs init
 // 4. Add yargs options to the config file
+// 5. Move words getter to a separate file
 
 // TODO Implementation Optional
 // 1. Add map for import types.

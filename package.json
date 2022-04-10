@@ -8,9 +8,7 @@
   "bin": {
     "importer": "./bin/index.js"
   },
-  "scripts": {
-    
-  },
+  "scripts": {},
   "dependencies": {
     "axios": "^0.21.1",
     "form-data": "^4.0.0",

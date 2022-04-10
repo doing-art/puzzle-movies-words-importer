@@ -6,7 +6,7 @@ class Init {
     axios.defaults.baseURL = baseURL;
   }
 
-  static initYargs(types) {
+  static initYargs(exportTypes) {
     return yargs(process.argv.slice(2))
       .option('email', {
         alias: 'e',
@@ -23,9 +23,9 @@ class Init {
       .option('type', {
         alias: 't',
         demandOption: false,
-        default: types.all,
-        choices: [types.all, types.page, types.word],
-        describe: `Export type: ${types.all} - all words (default), ${types.page} - all words on the pages from n to m, ${types.word} - first n words`,
+        default: exportTypes.ALL,
+        choices: [exportTypes.ALL, exportTypes.PAGE, exportTypes.WORD],
+        describe: `Export type: ${exportTypes.ALL} - all words (default), ${exportTypes.PAGE} - all words on the pages from n to m, ${exportTypes.WORD} - first n words`,
         type: 'string'
       })
       .option('words', {
@@ -35,19 +35,19 @@ class Init {
         describe: 'Number of words that should to be exported',
         type: 'number'
       })
-      .option('start-page', {
-        alias: 'sp',
+      .option('startpage', {
+        alias: 's',
         demandOption: false,
         number: true,
         describe: 'Start page number',
         type: 'number'
       })
-      .option('end-page', {
-        alias: 'ep',
+      .option('finishpage', {
+        alias: 'f',
         demandOption: false,
         number: true,
         describe: 'End page number',
-        type: 'string'
+        type: 'number'
       })
       .usage('Usage: importer import <email> <password> [options]')
       .example('importer import -e test@test.com -p qwerty123', 'Imports all the words from your dictionary')
