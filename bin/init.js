@@ -6,7 +6,7 @@ class Init {
     axios.defaults.baseURL = baseURL;
   }
 
-  static initYargs() {
+  static initYargs(types) {
     return yargs(process.argv.slice(2))
       .option('email', {
         alias: 'e',
@@ -18,6 +18,35 @@ class Init {
         alias: 'p',
         demandOption: true,
         describe: 'A password of the puzzle-movies account',
+        type: 'string'
+      })
+      .option('type', {
+        alias: 't',
+        demandOption: false,
+        default: types.all,
+        choices: [types.all, types.page, types.word],
+        describe: `Export type: ${types.all} - all words (default), ${types.page} - all words on the pages from n to m, ${types.word} - first n words`,
+        type: 'string'
+      })
+      .option('words', {
+        alias: 'w',
+        demandOption: false,
+        number: true,
+        describe: 'Number of words that should to be exported',
+        type: 'number'
+      })
+      .option('start-page', {
+        alias: 'sp',
+        demandOption: false,
+        number: true,
+        describe: 'Start page number',
+        type: 'number'
+      })
+      .option('end-page', {
+        alias: 'ep',
+        demandOption: false,
+        number: true,
+        describe: 'End page number',
         type: 'string'
       })
       .usage('Usage: importer import <email> <password> [options]')

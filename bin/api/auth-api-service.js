@@ -19,7 +19,7 @@ class AuthApiService {
       url: this.authUrl,
       data: credentialsForm,
       headers: { 'Content-Type': credentialsForm.getHeaders()['content-type'] }
-    });
+    }).then(res => res.data);
   }
 }
 
